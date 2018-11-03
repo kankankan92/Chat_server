@@ -8,6 +8,7 @@ public class ChatWorker extends Thread {
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
     private ChatHelper chatHelper = new ChatHelper();
+    private String currentUser;
 
     ChatWorker(DataInputStream dataInputStream, DataOutputStream dataOutputStream) {
         this.dataInputStream = dataInputStream;
@@ -24,9 +25,17 @@ public class ChatWorker extends Thread {
                     dataOutputStream.writeUTF(chatHelper.help());
                 } else if (instruction.toLowerCase().startsWith("login")) {
                     String[] words = instruction.split(" ");
-                    System.out.println(words[0]);
+                    currentUser = words[1];
                     chatHelper.login(words[1]);
                     dataOutputStream.writeUTF(words[1] + ", добро пожаловать.");
+                } else if (instruction.equalsIgnoreCase("list")) {
+                    dataOutputStream.writeUTF(chatHelper.list());
+                } else if (instruction.toLowerCase().startsWith("write")) {
+                    String[] words = instruction.split(" ");
+                    chatHelper.write(words[2], currentUser, words[1]);
+                    dataOutputStream.writeUTF("Сообщение отпревлено");
+                }else if (instruction.equalsIgnoreCase("read")){
+                    dataOutputStream.writeUTF(chatHelper.read(currentUser));
                 }
             }
         } catch (IOException e) {

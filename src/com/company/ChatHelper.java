@@ -30,11 +30,15 @@ public class ChatHelper {
         return list;
     }
 
-    public void write(String username, String message) {
-
+    public void write(String message, String from, String to) {
+        if (ChatStorage.getInstance().isThisUserHere(to)) {
+            Message newMessage = new Message(message, from, to);
+            ChatStorage.getInstance().addMessage(newMessage);
+        }
     }
 
-    public void read() {
+    public String read(String currentUser) {
+        return ChatStorage.getInstance().getMessagesForCurrentUser(currentUser);
     }
 
     public void exit() {
