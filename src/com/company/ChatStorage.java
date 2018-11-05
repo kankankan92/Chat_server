@@ -17,25 +17,25 @@ public class ChatStorage {
         this.users.add(user);
     }
 
-    public String getMessagesForCurrentUser(String carrentUser) {
+    public String getMessagesForUser(String user) {
         ArrayList<String> messagesForCurrentUser = new ArrayList<>();
         for (Message carrentMessage : messages) {
-            if (carrentMessage.getTo().equalsIgnoreCase(carrentUser)) {
-                messagesForCurrentUser.add(carrentMessage.getMessage());
+            if (carrentMessage.getTo().equalsIgnoreCase(user)) {
+                messagesForCurrentUser.add(carrentMessage.getFrom() + ":" + carrentMessage.getMessage());
             }
         }
         String list = String.join("\n", messagesForCurrentUser);
         return list;
     }
 
-    public boolean isThisUserHere(String name) {
-        boolean isThisUserHere = false;
+    public boolean isUserExists(String name) {
+        boolean isUserExists = false;
         for (User carrentUser : users) {
             if (carrentUser.getName().equalsIgnoreCase(name)) {
-                isThisUserHere = true;
+                isUserExists = true;
             }
         }
-        return isThisUserHere;
+        return isUserExists;
     }
 
     public LinkedList<Message> getMessages() {

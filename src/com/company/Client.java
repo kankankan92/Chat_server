@@ -14,13 +14,19 @@ public class Client {
         DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
         DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
 
-        System.out.println("Введите команду HELP");
+        System.out.println("Добро пожаловать в NastiaChat, вы можете увидеть список доступных команд, набрав Help");
 
         while (true) {
             Scanner scan = new Scanner(System.in);
             String string = scan.nextLine();
-            dataOutputStream.writeUTF(string);
-            System.out.println(dataInputStream.readUTF());
+            if (string.equalsIgnoreCase("exit")) {
+                dataOutputStream.writeUTF(string);
+                System.out.println(dataInputStream.readUTF());
+                return;
+            } else {
+                dataOutputStream.writeUTF(string);
+                System.out.println(dataInputStream.readUTF());
+            }
         }
     }
 }

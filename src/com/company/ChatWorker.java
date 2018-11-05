@@ -3,6 +3,7 @@ package com.company;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.SocketException;
 
 public class ChatWorker extends Thread {
     private DataInputStream dataInputStream;
@@ -21,7 +22,7 @@ public class ChatWorker extends Thread {
             while (true) {
                 String instruction;
                 instruction = dataInputStream.readUTF();
-                if (instruction.equalsIgnoreCase("HELP")) {
+                if (instruction.equalsIgnoreCase("help")) {
                     dataOutputStream.writeUTF(chatHelper.help());
                 } else if (instruction.toLowerCase().startsWith("login")) {
                     String[] words = instruction.split(" ");
@@ -31,13 +32,25 @@ public class ChatWorker extends Thread {
                 } else if (instruction.equalsIgnoreCase("list")) {
                     dataOutputStream.writeUTF(chatHelper.list());
                 } else if (instruction.toLowerCase().startsWith("write")) {
-                    String[] words = instruction.split(" ");
-                    chatHelper.write(words[2], currentUser, words[1]);
+                    int startTo = instruction.indexOf(" ") + 1;
+                    int startMessage = instruction.indexOf(" ", startTo + 1) + 1;
+                    String to = instruction.substring(startTo, startMessage - 1);
+                    String message = instruction.substring(startMessage);
+                    chatHelper.write(message, currentUser, to);
                     dataOutputStream.writeUTF("Сообщение отпревлено");
-                }else if (instruction.equalsIgnoreCase("read")){
+                } else if (instruction.equalsIgnoreCase("read")) {
                     dataOutputStream.writeUTF(chatHelper.read(currentUser));
+                } else if (instruction.equalsIgnoreCase("exit")) {
+                    currentUser = null;
+                    dataOutputStream.writeUTF("Досвидания");
+                    System.out.println("Клиент отключился");
+                    return;
+                } else {
+                    dataOutputStream.writeUTF("Некорректная команда, вы можете увидеть список команд набрав Help");
                 }
             }
+//        } catch (SocketException s) {
+//            System.out.println("Клиент отключился");
         } catch (IOException e) {
             e.printStackTrace();
         }

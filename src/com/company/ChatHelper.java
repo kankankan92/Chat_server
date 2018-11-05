@@ -31,14 +31,14 @@ public class ChatHelper {
     }
 
     public void write(String message, String from, String to) {
-        if (ChatStorage.getInstance().isThisUserHere(to)) {
+        if (ChatStorage.getInstance().isUserExists(to)) {
             Message newMessage = new Message(message, from, to);
             ChatStorage.getInstance().addMessage(newMessage);
         }
     }
 
     public String read(String currentUser) {
-        return ChatStorage.getInstance().getMessagesForCurrentUser(currentUser);
+        return ChatStorage.getInstance().getMessagesForUser(currentUser);
     }
 
     public void exit() {
