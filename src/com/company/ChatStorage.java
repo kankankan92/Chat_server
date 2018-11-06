@@ -3,6 +3,8 @@ package com.company;
 import java.net.PortUnreachableException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ChatStorage {
 
@@ -18,24 +20,27 @@ public class ChatStorage {
     }
 
     public String getMessagesForUser(String user) {
-        ArrayList<String> messagesForCurrentUser = new ArrayList<>();
-        for (Message carrentMessage : messages) {
-            if (carrentMessage.getTo().equalsIgnoreCase(user)) {
-                messagesForCurrentUser.add(carrentMessage.getFrom() + ":" + carrentMessage.getMessage());
-            }
-        }
-        String list = String.join("\n", messagesForCurrentUser);
-        return list;
+//        ArrayList<String> messagesForUser = new ArrayList<>();
+//        for (Message carrentMessage : messages) {
+//            if (carrentMessage.getTo().equalsIgnoreCase(user)) {
+//                messagesForUser.add(carrentMessage.getFrom() + ":" + carrentMessage.getMessage());
+//            }
+//        }
+//        String list = String.join("\n", messagesForUser);
+        return messages.stream()
+                .filter(message -> message.getTo().equalsIgnoreCase(user))
+                .map(message -> message.getFrom() + ":" + message.getMessage())
+                .collect(Collectors.joining("\n"));
     }
 
     public boolean isUserExists(String name) {
-        boolean isUserExists = false;
-        for (User carrentUser : users) {
-            if (carrentUser.getName().equalsIgnoreCase(name)) {
-                isUserExists = true;
-            }
-        }
-        return isUserExists;
+//        boolean isUserExists = false;
+//        for (User carrentUser : users) {
+//            if (carrentUser.getName().equalsIgnoreCase(name)) {
+//                isUserExists = true;
+//            }
+//        }
+        return users.stream().anyMatch(user -> user.getName().equalsIgnoreCase(name));
     }
 
     public LinkedList<Message> getMessages() {

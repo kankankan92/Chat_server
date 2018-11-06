@@ -2,6 +2,7 @@ package com.company;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.stream.Collectors;
 
 public class ChatHelper {
 
@@ -21,13 +22,15 @@ public class ChatHelper {
     }
 
     public String list() {
-        LinkedList<User> users = ChatStorage.getInstance().getUsers();
-        ArrayList<String> usersName = new ArrayList<>();
-        for (int i = 0; i < users.size(); i++) {
-            usersName.add(users.get(i).getName());
-        }
-        String list = String.join(",", usersName);
-        return list;
+//        LinkedList<User> users = ChatStorage.getInstance().getUsers();
+//        ArrayList<String> usersName = new ArrayList<>();
+//        for (User user : users) {
+//            usersName.add(user.getName());
+//        }
+//        String list = String.join(",", usersName);
+        return ChatStorage.getInstance().getUsers().stream()
+                .map(user -> user.getName())
+                .collect(Collectors.joining(","));
     }
 
     public void write(String message, String from, String to) {
